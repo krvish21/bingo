@@ -1,5 +1,5 @@
 /* Import other stylesheets first - @import must come before any CSS rules */
-@import url('./bingo-card.css');
+@import url('./bingo-cards.css');
 @import url('./user-interface.css');
 @import url('./winners.css');
 @import url('./modal.css');
