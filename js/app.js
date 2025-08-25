@@ -36,10 +36,21 @@ window.TeamBingo.BingoApp = {
 
     if (savedName && savedName.trim() !== '') {
       this.currentUserName = savedName;
-      window.TeamBingo.UIUtils.displayUserName(savedName);
+      this.displayUserName(savedName);
       this.startGame();
     } else {
       this.showNameModal();
+    }
+  },
+
+  // Display user name in header
+  displayUserName: function (name) {
+    const userInfo = document.getElementById('userInfo');
+    const userName = document.getElementById('userName');
+    
+    if (userInfo && userName) {
+      userName.textContent = name;
+      userInfo.style.display = 'block';
     }
   },
 
@@ -72,7 +83,7 @@ window.TeamBingo.BingoApp = {
     console.log('Name submitted:', name);
     this.currentUserName = name;
     window.TeamBingo.UserStorage.saveUserName(name);
-    window.TeamBingo.UIUtils.displayUserName(name);
+    this.displayUserName(name);
 
     this.hideNameModal();
     this.startGame();

@@ -33,11 +33,21 @@ window.TeamBingo.UIUtils = {
 
   // Display user name in the UI
   displayUserName: function (name) {
-    const userInfo = document.getElementById('userInfo');
-    const userName = document.getElementById('userName');
+    // Update header user name
+    const headerUserName = document.getElementById('headerUserName');
+    if (headerUserName) {
+      headerUserName.textContent = name;
+    }
 
-    userName.textContent = name;
-    userInfo.style.display = 'block';
+    // Update welcome message in userInfo
+    const userInfo = document.getElementById('userInfo');
+    if (userInfo) {
+      const welcomeText = userInfo.querySelector('.welcome-text');
+      if (welcomeText) {
+        welcomeText.innerHTML = `Welcome, <span class="user-name">${name}</span>!`;
+      }
+      userInfo.style.display = 'block';
+    }
   },
 
   // Celebrate a specific bingo achievement
@@ -64,13 +74,7 @@ window.TeamBingo.UIUtils = {
     }, 4000);
   },
 
-  // Update user info for bingo celebration (legacy method)
-  celebrateUser: function (userName) {
-    // Legacy method - replaced by celebrateBingo
-    this.celebrateBingo(userName, 'Bingo', 1);
-  },
-
-  // Reset user info to normal state
+  // Update user info to normal state
   resetUserInfo: function (userName) {
     const userInfo = document.getElementById('userInfo');
     const welcomeText = userInfo.querySelector('.welcome-text');
@@ -87,6 +91,49 @@ window.TeamBingo.UIUtils = {
     const completionMessage = document.getElementById('completionMessage');
     if (completionMessage) {
       completionMessage.style.display = show ? 'block' : 'none';
+    }
+  },
+
+  // Update progress bar based on marked squares
+  updateProgress: function () {
+    const squares = document.querySelectorAll('.bingo-square');
+    const markedSquares = document.querySelectorAll('.bingo-square.marked');
+    const totalSquares = squares.length;
+    const markedCount = markedSquares.length;
+
+    // Calculate progress percentage
+    const progressPercent = totalSquares > 0 ? Math.round((markedCount / totalSquares) * 100) : 0;
+
+    // Update progress bar
+    const progressFill = document.querySelector('.progress-fill');
+    const progressText = document.querySelector('.progress-text');
+
+    if (progressFill) {
+      progressFill.style.width = progressPercent + '%';
+
+      // Add visual feedback for progress milestones
+      if (progressPercent >= 75) {
+        progressFill.style.background = 'linear-gradient(90deg, #c17817, #f4d03f)';
+      } else if (progressPercent >= 50) {
+        progressFill.style.background = 'linear-gradient(90deg, #3f84e5, #85c1f9)';
+      } else if (progressPercent >= 25) {
+        progressFill.style.background = 'linear-gradient(90deg, #28a745, #6bcf7f)';
+      } else {
+        progressFill.style.background = 'linear-gradient(90deg, #6c757d, #adb5bd)';
+      }
+    }
+
+    if (progressText) {
+      progressText.textContent = `${markedCount}/${totalSquares} (${progressPercent}%)`;
+    }
+
+    // Add subtle animation when progress changes
+    const progressBar = document.querySelector('.progress-bar');
+    if (progressBar) {
+      progressBar.style.transform = 'scale(1.02)';
+      setTimeout(() => {
+        progressBar.style.transform = 'scale(1)';
+      }, 200);
     }
   }
 };
@@ -137,73 +184,99 @@ window.TeamBingo.WinnersUI = {
     const winnerItem = document.createElement('div');
     winnerItem.className = 'winner-item';
 
-    // Add position classes and badges for top 3
+    // Add position classes for top 3
     if (index === 0) {
       winnerItem.classList.add('first-place');
-      const badge = this._createPositionBadge('👑', 'first');
-      winnerItem.appendChild(badge);
     } else if (index === 1) {
       winnerItem.classList.add('second-place');
-      const badge = this._createPositionBadge('2', 'second');
-      winnerItem.appendChild(badge);
     } else if (index === 2) {
       winnerItem.classList.add('third-place');
-      const badge = this._createPositionBadge('3', 'third');
-      winnerItem.appendChild(badge);
     }
 
-    const winnerName = document.createElement('span');
+    // Create rank badge
+    const rankBadge = document.createElement('div');
+    rankBadge.className = 'winner-rank';
+    
+    if (index === 0) {
+      rankBadge.classList.add('first');
+      rankBadge.textContent = '👑';
+    } else if (index === 1) {
+      rankBadge.classList.add('second');
+      rankBadge.textContent = '2';
+    } else if (index === 2) {
+      rankBadge.classList.add('third');
+      rankBadge.textContent = '3';
+    } else {
+      rankBadge.classList.add('other');
+      rankBadge.textContent = index + 1;
+    }
+
+    // Create main content container
+    const winnerMain = document.createElement('div');
+    winnerMain.className = 'winner-main';
+
+    // Winner name
+    const winnerName = document.createElement('div');
     winnerName.className = 'winner-name';
     winnerName.textContent = winner.name;
 
+    // Winner stats container
+    const winnerStats = document.createElement('div');
+    winnerStats.className = 'winner-stats';
+
+    // Bingo count badge
     const bingoCount = document.createElement('span');
     bingoCount.className = 'bingo-count';
     const count = winner.bingoCount || 1;
     bingoCount.textContent = `${count} bingo${count !== 1 ? 's' : ''}`;
+    winnerStats.appendChild(bingoCount);
 
-    // Show additional context for the winner
-    const winnerContext = document.createElement('span');
-    winnerContext.className = 'winner-context';
-
-    // Check if this person has the highest bingo count
-    const maxCount = Math.max(...allWinners.map(w => w.bingoCount || 1));
-    const isHighestCount = (winner.bingoCount || 1) === maxCount;
-
-    // Check if this person was first chronologically
-    const earliestTime = Math.min(...allWinners.map(w => new Date(w["first-bingo-time"] || w["date-time"]).getTime()));
-    const wasFirst = new Date(winner["first-bingo-time"] || winner["date-time"]).getTime() === earliestTime;
-
+    // Context badge (only for first place with special achievements)
     if (index === 0) {
-      if (isHighestCount && wasFirst) {
-        winnerContext.textContent = "Most bingos & First winner";
-      } else if (isHighestCount) {
-        winnerContext.textContent = "Most bingos";
-      } else if (wasFirst) {
-        winnerContext.textContent = "First winner";
+      const maxCount = Math.max(...allWinners.map(w => w.bingoCount || 1));
+      const isHighestCount = (winner.bingoCount || 1) === maxCount;
+      
+      const earliestTime = Math.min(...allWinners.map(w => new Date(w["first-bingo-time"] || w["date-time"]).getTime()));
+      const wasFirst = new Date(winner["first-bingo-time"] || winner["date-time"]).getTime() === earliestTime;
+
+      if (isHighestCount || wasFirst) {
+        const winnerContext = document.createElement('span');
+        winnerContext.className = 'winner-context';
+        
+        if (isHighestCount && wasFirst) {
+          winnerContext.textContent = "Most & First";
+        } else if (isHighestCount) {
+          winnerContext.textContent = "Most bingos";
+        } else if (wasFirst) {
+          winnerContext.textContent = "First winner";
+        }
+        
+        if (winnerContext.textContent) {
+          winnerStats.appendChild(winnerContext);
+        }
       }
     }
 
-    const winnerDate = document.createElement('span');
-    winnerDate.className = 'winner-date';
+    // Add name and stats to main container
+    winnerMain.appendChild(winnerName);
+    winnerMain.appendChild(winnerStats);
+
+    // Winner time
+    const winnerTime = document.createElement('div');
+    winnerTime.className = 'winner-time';
     const date = new Date(winner['date-time']);
-    winnerDate.textContent = date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+    winnerTime.textContent = date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
 
-    // Create info container for name, bingo count, and context
-    const infoContainer = document.createElement('div');
-    infoContainer.className = 'winner-info';
-    infoContainer.appendChild(winnerName);
-    infoContainer.appendChild(bingoCount);
-    if (winnerContext.textContent) {
-      infoContainer.appendChild(winnerContext);
-    }
-
-    winnerItem.appendChild(infoContainer);
-    winnerItem.appendChild(winnerDate);
+    // Assemble the winner item
+    winnerItem.appendChild(rankBadge);
+    winnerItem.appendChild(winnerMain);
+    winnerItem.appendChild(winnerTime);
 
     return winnerItem;
   },
 
   _createPositionBadge: function (text, className) {
+    // This function is now unused but keeping for compatibility
     const badge = document.createElement('div');
     badge.className = `position-badge ${className}`;
     badge.textContent = text;

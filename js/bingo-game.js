@@ -56,17 +56,53 @@ window.TeamBingo.BingoGame = {
       if (i === window.TeamBingo.GAME_CONFIG.FREE_SPACE_INDEX) {
         square.classList.add('free-space', 'marked');
         square.innerHTML = '<div class="square-text">🎯<br>FREE<br>SPACE</div>';
+        setTextLengthAttribute(square, 'FREE SPACE');
       } else {
         if (this.markedSquares.has(i)) {
           square.classList.add('marked');
         }
-        square.innerHTML = `<div class="square-text">${this.currentCard[i]}</div>`;
+        const squareText = this.currentCard[i];
+        square.innerHTML = `<div class="square-text">${squareText}</div>`;
+        setTextLengthAttribute(square, squareText);
 
         square.addEventListener('click', () => this.toggleSquare(i));
       }
 
       square.style.animationDelay = `${i * 0.03}s`;
       bingoCard.appendChild(square);
+    }
+
+    // Update progress bar after rendering
+    setTimeout(() => {
+      if (window.TeamBingo.UIUtils && window.TeamBingo.UIUtils.updateProgress) {
+        window.TeamBingo.UIUtils.updateProgress();
+      }
+      this.updateProgressIndicator();
+    }, 100); // Small delay to ensure DOM is ready
+  },
+
+  // Update progress indicator
+  updateProgressIndicator: function() {
+    const progressFill = document.getElementById('progressFill');
+    const progressText = document.getElementById('progressText');
+    
+    if (progressFill && progressText) {
+      const totalSquares = window.TeamBingo.GAME_CONFIG.GRID_SIZE;
+      const completedSquares = this.markedSquares.size;
+      const percentage = (completedSquares / totalSquares) * 100;
+      
+      progressFill.style.width = `${percentage}%`;
+      progressText.textContent = `${completedSquares} of ${totalSquares} squares completed`;
+      
+      // Add visual feedback for milestones
+      if (percentage >= 100) {
+        progressText.textContent = "🎉 All squares completed!";
+        progressFill.style.background = "linear-gradient(90deg, #10b981, #06b6d4, #6366f1)";
+      } else if (percentage >= 75) {
+        progressText.textContent = `${completedSquares} of ${totalSquares} squares completed - Almost there!`;
+      } else if (percentage >= 50) {
+        progressText.textContent = `${completedSquares} of ${totalSquares} squares completed - Halfway done!`;
+      }
     }
   },
 
@@ -88,6 +124,12 @@ window.TeamBingo.BingoGame = {
       square.classList.add('marked');
       console.log(`Square ${index} marked`);
     }
+
+    // Update UI
+    this.renderCard();
+    
+    // Update progress indicator
+    this.updateProgressIndicator();
 
     // Save game state
     window.TeamBingo.GameStorage.saveGameState(this.currentCard, this.markedSquares, this.completedBingos);
@@ -189,3 +231,15 @@ window.TeamBingo.BingoGame = {
     console.log('Game initialized');
   }
 };
+
+// Helper function to set text length attributes for better sizing
+function setTextLengthAttribute(element, text) {
+  const textLength = text.length;
+  if (textLength <= 20) {
+    element.setAttribute('data-text-length', 'short');
+  } else if (textLength <= 35) {
+    element.setAttribute('data-text-length', 'medium');
+  } else {
+    element.setAttribute('data-text-length', 'long');
+  }
+}

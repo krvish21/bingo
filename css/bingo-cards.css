@@ -1,38 +1,100 @@
-/* Bingo card and squares styling */
+/* Enhanced Bingo card and squares styling */
 .bingo-card {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  gap: 6px;
-  margin-bottom: 16px;
-  max-width: 450px;
-  width: 100%;
-  margin-left: auto;
-  margin-right: auto;
+  gap: 10px;
+  margin: 0 auto;
+  width: 520px; /* Slightly larger for better visual impact */
+  height: 520px;
+  padding: 25px;
+  background: linear-gradient(145deg, 
+    rgba(255, 255, 255, 0.9) 0%, 
+    rgba(236, 254, 255, 0.8) 50%, 
+    rgba(255, 255, 255, 0.9) 100%);
+  border-radius: 20px;
+  border: 2px solid rgba(99, 102, 241, 0.2);
+  box-shadow: 
+    0 20px 40px rgba(99, 102, 241, 0.15),
+    0 10px 20px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
+  position: relative;
+  overflow: visible;
+}
+
+/* Add subtle pattern overlay */
+.bingo-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 20% 20%, rgba(99, 102, 241, 0.03) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(6, 182, 212, 0.03) 0%, transparent 50%);
+  border-radius: 18px;
+  pointer-events: none;
+}
+
+/* Add animated border glow */
+.bingo-card::after {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, 
+    #6366f1, #8b5cf6, #06b6d4, #10b981, #f59e0b, #f43f5e, #6366f1);
+  background-size: 300% 300%;
+  border-radius: 22px;
+  opacity: 0;
+  z-index: -1;
+  animation: borderGlow 4s ease-in-out infinite;
+  transition: opacity 0.3s ease;
+}
+
+.bingo-card:hover::after {
+  opacity: 0.3;
+}
+
+@keyframes borderGlow {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
 }
 
 .bingo-square {
-  background: transparent;
-  border: 3px solid #3f84e5;
-  border-radius: 16px;
-  padding: 8px;
+  background: linear-gradient(145deg, 
+    rgba(255, 255, 255, 0.95) 0%, 
+    rgba(248, 250, 252, 0.9) 100%);
+  border: 2px solid rgba(99, 102, 241, 0.2);
+  border-radius: 12px;
+  padding: 6px;
   text-align: center;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   font-size: 10px;
   font-weight: 500;
-  line-height: 1.3;
-  aspect-ratio: 1;
+  line-height: 1.1;
   width: 100%;
-  height: auto;
+  height: 100%;
+  aspect-ratio: 1 / 1; /* Enforce perfect square */
   display: flex;
   align-items: center;
   justify-content: center;
   position: relative;
   overflow: hidden;
-  color: #3f84e5;
-  box-shadow: 0 2px 8px rgba(63, 132, 229, 0.1);
+  color: #374151;
+  box-shadow: 
+    0 4px 12px rgba(99, 102, 241, 0.08),
+    0 2px 4px rgba(0, 0, 0, 0.06),
+    inset 0 1px 0 rgba(255, 255, 255, 0.7);
+  word-wrap: break-word;
+  hyphens: auto;
+  transform-style: preserve-3d;
 }
 
+/* Subtle shimmer effect */
 .bingo-square::before {
   content: '';
   position: absolute;
@@ -40,44 +102,244 @@
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(193, 120, 23, 0.2), transparent);
-  transition: left 0.5s;
+  background: linear-gradient(90deg, 
+    transparent, 
+    rgba(255, 255, 255, 0.4), 
+    transparent);
+  transition: left 0.6s ease;
+  border-radius: 10px;
 }
 
 .bingo-square:hover {
-  background: linear-gradient(145deg, rgba(240, 226, 231, 0.3), rgba(63, 132, 229, 0.1));
+  background: linear-gradient(145deg, 
+    rgba(99, 102, 241, 0.1) 0%, 
+    rgba(236, 254, 255, 0.8) 50%, 
+    rgba(255, 255, 255, 0.95) 100%);
   transform: translateY(-4px) scale(1.02);
-  box-shadow: 0 12px 32px rgba(63, 132, 229, 0.25);
-  border-color: #c17817;
+  box-shadow: 
+    0 15px 35px rgba(99, 102, 241, 0.2),
+    0 8px 15px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  border-color: rgba(6, 182, 212, 0.4);
+  color: #6366f1;
+  z-index: 2;
 }
 
 .bingo-square:hover::before {
   left: 100%;
 }
 
+/* Active/pressed state */
+.bingo-square:active {
+  transform: translateY(-2px) scale(1.01);
+  transition: all 0.1s ease;
+}
+
 .bingo-square.marked {
-  background: linear-gradient(145deg, rgba(63, 120, 76, 0.2), rgba(193, 120, 23, 0.1));
-  color: #3f784c;
-  border-color: #3f784c;
+  background: linear-gradient(145deg, 
+    rgba(16, 185, 129, 0.9) 0%, 
+    rgba(6, 182, 212, 0.8) 50%, 
+    rgba(16, 185, 129, 0.9) 100%);
+  color: #ffffff;
+  border-color: rgba(16, 185, 129, 0.8);
   transform: scale(0.98);
-  box-shadow: 0 8px 24px rgba(63, 120, 76, 0.4);
+  box-shadow: 
+    0 8px 25px rgba(16, 185, 129, 0.3),
+    0 4px 10px rgba(0, 0, 0, 0.1),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+  font-weight: 600;
+  animation: markSquare 0.5s ease-out;
+}
+
+@keyframes markSquare {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(0.98); }
 }
 
 .bingo-square.marked::after {
   content: '✓';
   position: absolute;
   top: 8px;
-  right: 12px;
+  right: 10px;
   font-size: 18px;
   font-weight: bold;
-  color: #3f784c;
-  text-shadow: 0 2px 4px rgba(255, 255, 255, 0.3);
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  z-index: 3;
+  animation: checkmarkAppear 0.3s ease-out 0.2s both;
 }
 
-.bingo-square.free-space {
-  background: linear-gradient(145deg, rgba(178, 13, 48, 0.2), rgba(63, 132, 229, 0.1));
-  color: #b20d30;
-  border-color: #b20d30;
+@keyframes checkmarkAppear {
+  0% { 
+    opacity: 0; 
+    transform: scale(0) rotate(-180deg); 
+  }
+  100% { 
+    opacity: 1; 
+    transform: scale(1) rotate(0deg); 
+  }
+}
+
+/* Free space styling - must be more specific than .marked to override */
+.bingo-square.free-space.marked {
+  background: linear-gradient(145deg, 
+    rgba(255, 0, 0, 0.95) 0%, 
+    rgba(255, 100, 100, 0.9) 50%, 
+    rgba(255, 0, 0, 0.95) 100%) !important;
+  color: #ffffff !important;
+  border: 4px solid #ff0000 !important;
+  font-weight: 900 !important;
+  box-shadow: 
+    0 20px 40px rgba(255, 0, 0, 0.6),
+    0 10px 20px rgba(0, 0, 0, 0.3),
+    inset 0 2px 0 rgba(255, 255, 255, 0.5),
+    inset 0 -2px 0 rgba(0, 0, 0, 0.2) !important;
+  font-size: 12px !important;
+  animation: pulseGlow 1s ease-in-out infinite !important;
+  position: relative;
+  transform: scale(1.1) !important;
+  z-index: 10 !important;
+  opacity: 1 !important; /* Override the initial opacity: 0 */
+}
+
+.bingo-square.free-space.marked .square-text {
+  font-weight: 900 !important;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8) !important;
+  letter-spacing: 1px !important;
+  color: #ffffff !important;
+  opacity: 1 !important; /* Ensure text is visible */
+}
+
+/* Hide the checkmark on free space */
+.bingo-square.free-space.marked::after {
+  display: none !important;
+}
+
+@keyframes pulseGlow {
+  0%, 100% { 
+    box-shadow: 
+      0 20px 40px rgba(255, 0, 0, 0.6),
+      0 10px 20px rgba(0, 0, 0, 0.3),
+      inset 0 2px 0 rgba(255, 255, 255, 0.5),
+      inset 0 -2px 0 rgba(0, 0, 0, 0.2) !important;
+    transform: scale(1.1) !important;
+  }
+  50% { 
+    box-shadow: 
+      0 25px 50px rgba(255, 0, 0, 0.8),
+      0 15px 25px rgba(0, 0, 0, 0.4),
+      inset 0 3px 0 rgba(255, 255, 255, 0.6),
+      inset 0 -3px 0 rgba(0, 0, 0, 0.3) !important;
+    transform: scale(1.15) !important;
+  }
+}
+
+/* Text sizing for different content lengths */
+.bingo-square[data-text-length="short"] {
+  font-size: 11px;
   font-weight: 600;
-  box-shadow: 0 8px 24px rgba(178, 13, 48, 0.3);
+}
+
+.bingo-square[data-text-length="medium"] {
+  font-size: 10px;
+  font-weight: 500;
+}
+
+.bingo-square[data-text-length="long"] {
+  font-size: 9px;
+  line-height: 1.0;
+  font-weight: 500;
+}
+
+/* Square text wrapper */
+.square-text {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  word-wrap: break-word;
+  hyphens: auto;
+  overflow-wrap: break-word;
+  padding: 4px;
+  position: relative;
+  z-index: 1;
+}
+
+/* Winning line indicator */
+.bingo-square.winning-line {
+  animation: winningPulse 1.5s ease-in-out 3;
+}
+
+@keyframes winningPulse {
+  0%, 100% { 
+    transform: scale(0.98);
+    box-shadow: 
+      0 8px 25px rgba(16, 185, 129, 0.3),
+      0 4px 10px rgba(0, 0, 0, 0.1),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  }
+  50% { 
+    transform: scale(1.02);
+    box-shadow: 
+      0 12px 35px rgba(16, 185, 129, 0.5),
+      0 6px 15px rgba(0, 0, 0, 0.15),
+      inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  }
+}
+
+/* Progress indicator */
+.bingo-progress {
+  width: 100%;
+  max-width: 520px;
+  margin-top: 15px;
+  text-align: center;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 6px;
+  background: rgba(99, 102, 241, 0.1);
+  border-radius: 3px;
+  overflow: hidden;
+  margin-bottom: 8px;
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #6366f1, #8b5cf6, #06b6d4);
+  border-radius: 3px;
+  transition: width 0.5s ease;
+  box-shadow: 0 1px 3px rgba(99, 102, 241, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.progress-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, 
+    transparent, 
+    rgba(255, 255, 255, 0.4), 
+    transparent);
+  animation: progressShine 2s ease-in-out infinite;
+}
+
+@keyframes progressShine {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
+.progress-text {
+  font-size: 0.8em;
+  color: #6b7280;
+  font-weight: 500;
 }

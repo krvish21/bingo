@@ -10,29 +10,88 @@
 
 <body>
   <header class="app-header">
-    <h1>DTD Bingo</h1>
+    <div class="header-content">
+      <h1>DTD Bingo</h1>
+      <div id="userInfo" class="user-info-header" style="display: none;">
+        <div class="welcome-text">Welcome, <span id="userName"></span>!</div>
+      </div>
+    </div>
   </header>
 
   <div class="main-content">
-    <div class="container">
-      <div class="left-section">
-        <div id="userInfo" class="user-info" style="display: none;">
-          <div class="welcome-text">Welcome, <span id="userName"></span>!</div>
+    <div class="game-container">
+      <!-- Rules Panel - Left Column -->
+      <div class="rules-panel">
+        <div class="rules-content">
+          <h2>🎯 How to Play</h2>
+          
+          <div class="rules-section">
+            <h3>📋 Game Rules</h3>
+            <ul>
+              <li>Complete tasks from your daily work activities</li>
+              <li>Click on a square when you accomplish that task</li>
+              <li>Get 5 squares in a row (horizontal, vertical, or diagonal) to win</li>
+              <li>The center square is a FREE SPACE - automatically marked</li>
+              <li>Multiple bingos can be achieved on the same board</li>
+            </ul>
+          </div>
+
+          <div class="rules-section">
+            <h3>🏆 Winning Types</h3>
+            <ul>
+              <li><strong>Horizontal:</strong> Complete any full row</li>
+              <li><strong>Vertical:</strong> Complete any full column</li>
+              <li><strong>Diagonal:</strong> Complete either diagonal line</li>
+              <li><strong>Four Corners:</strong> Complete all four corner squares</li>
+            </ul>
+          </div>
+
+          <div class="rules-section">
+            <h3>🎮 Game Features</h3>
+            <ul>
+              <li>Your progress is automatically saved</li>
+              <li>View all winners in the winners panel</li>
+              <li>Reset your board anytime to start fresh</li>
+              <li>Celebrate your achievements with confetti!</li>
+            </ul>
+          </div>
+
+          <div class="rules-section">
+            <h3>💡 Tips</h3>
+            <ul>
+              <li>Focus on tasks you do regularly for easy wins</li>
+              <li>Keep track of your daily activities</li>
+              <li>Try to complete multiple bingo patterns</li>
+              <li>Share your wins with your team!</li>
+            </ul>
+          </div>
         </div>
-
-        <div id="bingoCard" class="bingo-card"></div>
       </div>
-    </div>
 
-    <div class="winners-card">
-      <div id="winnersSection" class="winners-section">
-        <h3>🏆 Winners</h3>
-        <div id="winnersList" class="winners-list">
-          <div class="no-winners">No winners yet. Be the first!</div>
+      <!-- Game Panel - Center Column -->
+      <div class="game-panel">
+        <div class="game-content">
+          <div id="bingoCard" class="bingo-card"></div>
+          <div class="bingo-progress">
+            <div class="progress-bar">
+              <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+            </div>
+            <div class="progress-text" id="progressText">0 of 25 squares completed</div>
+          </div>
         </div>
       </div>
 
-      <button id="resetBtn" class="reset-btn">Reset board</button>
+      <!-- Winners Panel - Right Column -->
+      <div class="winners-panel">
+        <div class="winners-content">
+          <h2>🏆 Winners</h2>
+          <div id="winnersList" class="winners-list">
+            <div class="no-winners">No winners yet. Be the first!</div>
+          </div>
+
+          <button id="resetBtn" class="reset-btn">Reset board</button>
+        </div>
+      </div>
     </div>
   </div>
 
