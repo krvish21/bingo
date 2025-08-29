@@ -3,31 +3,40 @@ window.TeamBingo = window.TeamBingo || {};
 
 // Bingo game items/achievements
 window.TeamBingo.BINGO_ITEMS = [
-  "✅ Closed 2+ Jira tickets",
-  "🧠 Attended all stand-ups",
-  "🧪 Logged bug with clear steps",
-  "🧼 Closed ticket ahead of ETA",
-  "✅ Completed task (no reopens)",
-  "❓ Asked helpful question",
-  "🧑‍🔧 Unblocked someone else",
-  "🏷️ Tagged helpful comment",
-  "🧪 Verified fix in UAT env",
-  "📋 Joined backlog grooming",
-  "👀 Reviewed 2+ PRs well",
-  "📝 Clarified AC",
-  "🧑‍💻 Joined all syncs on time",
-  "🧪 Updated test/checklist",
-  "✅ Finished (no reopens)",
-  "🔧 Created reusable code",
-  "🧪 Tested outside module",
-  "💡 Shared tip/tool",
-  "🤝 Helped outside scope",
-  "🔧 Used new tool",
-  "✅ Zero rework task",
-  "🔄 Joined retro talk",
-  "🚫 Explained blocker",
-  "🗣️ Got a shoutout",
-  "✅ Self-managed task"
+  // Collaboration & Communication
+  "🤝 Helped unblock a teammate",
+  "💡 Shared useful knowledge in standup",
+  "✍️ Improved documentation clarity",
+  "👥 Participated actively in refinement",
+  "🎯 Delivered constructive PR feedback",
+
+  // Quality & Testing
+  "🐛 Reported issue with clear steps",
+  "✅ Verified fix before deployment",
+  "🔍 Found edge case in testing",
+  "📝 Updated test documentation",
+  "🎯 Achieved zero-defect delivery",
+
+  // Process Improvement
+  "⚡ Suggested workflow improvement",
+  "📊 Updated task status promptly",
+  "🎉 Completed work ahead of time",
+  "🔄 Shared valuable retro feedback",
+  "📈 Helped improve team metrics",
+
+  // Learning & Growth
+  "📚 Learned new tool/technique",
+  "🤓 Shared learning with team",
+  "💪 Stepped out of comfort zone",
+  "🌱 Applied feedback effectively",
+  "🎓 Mentored/supported others",
+
+  // Team Success
+  "🎯 Met sprint commitment",
+  "🚀 Contributed to team goals",
+  "💬 Raised risks early",
+  "🌟 Received peer recognition",
+  "🤝 Supported cross-team effort"
 ];
 
 // Winning conditions for bingo (rows, columns, diagonals)
