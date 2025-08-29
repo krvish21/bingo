@@ -5,12 +5,12 @@ window.TeamBingo.BingoApp = {
   currentUserName: null,
 
   // Initialize the entire application
-  init: function () {
+  init: async function () {
     console.log('Initializing Team Bingo application...');
 
     this.setupEventListeners();
-    this.checkForExistingUser();
-    this.loadWinners();
+    await this.checkForExistingUser();
+    await this.loadWinners();
   },
 
   // Set up all event listeners
@@ -30,14 +30,22 @@ window.TeamBingo.BingoApp = {
   },
 
   // Check if user already exists in storage
-  checkForExistingUser: function () {
+  checkForExistingUser: async function () {
     const savedName = window.TeamBingo.UserStorage.loadUserName();
     console.log('Checking for existing user. Found:', savedName);
 
     if (savedName && savedName.trim() !== '') {
-      this.currentUserName = savedName;
-      this.displayUserName(savedName);
-      this.startGame();
+      // Validate stored user against current admin data
+      const isValidUser = await window.TeamBingo.ApiService.validateUser(savedName);
+      if (isValidUser) {
+        this.currentUserName = savedName;
+        this.displayUserName(savedName);
+        this.startGame();
+      } else {
+        // Clear invalid user and show login
+        window.TeamBingo.UserStorage.saveUserName('');
+        this.showNameModal();
+      }
     } else {
       this.showNameModal();
     }
@@ -71,7 +79,7 @@ window.TeamBingo.BingoApp = {
   },
 
   // Handle name submission
-  handleNameSubmission: function () {
+  handleNameSubmission: async function () {
     const nameInput = document.getElementById('nameInput');
     const name = nameInput.value.trim();
 
@@ -80,7 +88,16 @@ window.TeamBingo.BingoApp = {
       return;
     }
 
-    console.log('Name submitted:', name);
+    // Validate user against admin data
+    const isValidUser = await window.TeamBingo.ApiService.validateUser(name);
+    if (!isValidUser) {
+      alert('Sorry, you are not authorized to play. Please contact your administrator.');
+      nameInput.value = '';
+      nameInput.focus();
+      return;
+    }
+
+    console.log('Name submitted and validated:', name);
     this.currentUserName = name;
     window.TeamBingo.UserStorage.saveUserName(name);
     this.displayUserName(name);
@@ -90,9 +107,9 @@ window.TeamBingo.BingoApp = {
   },
 
   // Start the bingo game
-  startGame: function () {
+  startGame: async function () {
     console.log('Starting game for user:', this.currentUserName);
-    window.TeamBingo.BingoGame.initializeGame();
+    await window.TeamBingo.BingoGame.initializeGame();
 
     // Override the toggleSquare method to handle wins
     const originalToggleSquare = window.TeamBingo.BingoGame.toggleSquare.bind(window.TeamBingo.BingoGame);
@@ -179,5 +196,7 @@ window.TeamBingo.BingoApp = {
 
 // Initialize the application when DOM is loaded
 document.addEventListener('DOMContentLoaded', function () {
-  window.TeamBingo.BingoApp.init();
+  window.TeamBingo.BingoApp.init().catch(error => {
+    console.error('Failed to initialize application:', error);
+  });
 });

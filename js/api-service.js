@@ -87,6 +87,46 @@ window.TeamBingo.ApiService = {
     }
   },
 
+  getAdminData: async function () {
+    if (!window.TeamBingo.API_CONFIG.USE_API) {
+      console.log('API disabled - Returning mock tasks data');
+      return Promise.resolve(window.TeamBingo.MOCK_DATA);
+    }
+
+    try {
+      const response = await this._makeRequest('GET', `${window.TeamBingo.API_CONFIG.BASE_URL}/${window.TeamBingo.API_CONFIG.ADMIN_BIN_ID}/latest`);
+      console.log('Admin data retrieved successfully');
+      return response;
+    } catch (error) {
+      console.error('Error retrieving tasks:', error);
+      return window.TeamBingo.MOCK_DATA;
+    }
+  },
+
+  validateUser: async function (username) {
+    try {
+      const adminData = await this.getAdminData();
+      if (!adminData || !adminData.users) {
+        console.error('No user data available');
+        return false;
+      }
+
+      // Case-insensitive search for the username
+      const isValidUser = adminData.users.some(user => 
+        user.toLowerCase() === username.toLowerCase()
+      );
+
+      if (!isValidUser) {
+        console.log('User not found in authorized users list:', username);
+      }
+
+      return isValidUser;
+    } catch (error) {
+      console.error('Error validating user:', error);
+      return false;
+    }
+  },
+
   _makeRequest: function (method, url, data) {
     return new Promise((resolve, reject) => {
       const req = new XMLHttpRequest();

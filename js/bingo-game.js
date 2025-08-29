@@ -6,8 +6,28 @@ window.TeamBingo.BingoGame = {
   markedSquares: new Set(),
   completedBingos: new Set(), // Track which bingo patterns have been completed
 
+  // Load tasks from admin data
+  loadTasks: async function () {
+    try {
+      const adminData = await window.TeamBingo.ApiService.getAdminData();
+      if (adminData && adminData.tasks && adminData.tasks.length > 0) {
+        window.TeamBingo.BINGO_ITEMS = adminData.tasks;
+        console.log('Loaded tasks from admin data:', window.TeamBingo.BINGO_ITEMS);
+      } else {
+        console.error('No tasks found in admin data');
+      }
+    } catch (error) {
+      console.error('Error loading tasks:', error);
+    }
+  },
+
   // Generate a new random bingo card
-  generateCard: function () {
+  generateCard: async function () {
+    // Load tasks first if they haven't been loaded
+    if (window.TeamBingo.BINGO_ITEMS.length === 0) {
+      await this.loadTasks();
+    }
+
     const shuffled = [...window.TeamBingo.BINGO_ITEMS].sort(() => Math.random() - 0.5);
     this.currentCard = new Array(window.TeamBingo.GAME_CONFIG.GRID_SIZE);
 
@@ -220,11 +240,14 @@ window.TeamBingo.BingoGame = {
   },
 
   // Initialize or continue game
-  initializeGame: function () {
+  initializeGame: async function () {
     const hasLoadedState = this.loadSavedState();
 
     if (!hasLoadedState) {
-      this.generateCard();
+      await this.generateCard();
+    } else if (window.TeamBingo.BINGO_ITEMS.length === 0) {
+      // Load tasks even for saved state to ensure they're available
+      await this.loadTasks();
     }
 
     this.renderCard();

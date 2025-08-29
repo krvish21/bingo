@@ -13,7 +13,10 @@ window.TeamBingo.API_CONFIG = {
   BASE_URL: "https://api.jsonbin.io/v3/b",
   MASTER_KEY: "$2a$10$au5QUvO96N2h.LhgE898weycIz9GBuIciW5gEhuSkLrqPLeMw6uVO",
   ACCESS_KEY: "$2a$10$REm0aaanMaWGc5FsPVB5GOZOKBu.VlTVqTDcuDbK2DXTAdtcwnXEq",
-  USE_API: true // Enable API for production use
+
+  ADMIN_BIN_ID: "68b150d7d0ea881f4069f0e3",
+
+  USE_API: true, // Enable API for production use
 };
 
 // Confetti animation configuration

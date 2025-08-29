@@ -1,43 +1,8 @@
 // Global namespace for Team Bingo
 window.TeamBingo = window.TeamBingo || {};
 
-// Bingo game items/achievements
-window.TeamBingo.BINGO_ITEMS = [
-  // Collaboration & Communication
-  "🤝 Helped unblock a teammate",
-  "💡 Shared useful knowledge in standup",
-  "✍️ Improved documentation clarity",
-  "👥 Participated actively in refinement",
-  "🎯 Delivered constructive PR feedback",
-
-  // Quality & Testing
-  "🐛 Reported issue with clear steps",
-  "✅ Verified fix before deployment",
-  "🔍 Found edge case in testing",
-  "📝 Updated test documentation",
-  "🎯 Achieved zero-defect delivery",
-
-  // Process Improvement
-  "⚡ Suggested workflow improvement",
-  "📊 Updated task status promptly",
-  "🎉 Completed work ahead of time",
-  "🔄 Shared valuable retro feedback",
-  "📈 Helped improve team metrics",
-
-  // Learning & Growth
-  "📚 Learned new tool/technique",
-  "🤓 Shared learning with team",
-  "💪 Stepped out of comfort zone",
-  "🌱 Applied feedback effectively",
-  "🎓 Mentored/supported others",
-
-  // Team Success
-  "🎯 Met sprint commitment",
-  "🚀 Contributed to team goals",
-  "💬 Raised risks early",
-  "🌟 Received peer recognition",
-  "🤝 Supported cross-team effort"
-];
+// Initialize empty bingo items array - will be populated from admin data
+window.TeamBingo.BINGO_ITEMS = [];
 
 // Winning conditions for bingo (rows, columns, diagonals)
 window.TeamBingo.WIN_CONDITIONS = [
@@ -65,3 +30,44 @@ window.TeamBingo.GAME_CONFIG = {
   CARDS_TO_SHOW: 24,
   MAX_WINNERS_DISPLAY: 5
 };
+
+
+window.TeamBingo.MOCK_DATA = {
+  "tasks": [
+    "🤝 Helped unblock a teammate",
+    "💡 Shared useful knowledge in standup",
+    "✍️ Improved documentation clarity",
+    "👥 Participated actively in refinement",
+    "🎯 Delivered constructive PR feedback",
+    "🐛 Reported issue with clear steps",
+    "✅ Verified fix before deployment",
+    "🔍 Found edge case in testing",
+    "📝 Updated test documentation",
+    "🎯 Achieved zero-defect delivery",
+    "⚡ Suggested workflow improvement",
+    "📊 Updated task status promptly",
+    "🎉 Completed work ahead of time",
+    "🔄 Shared valuable retro feedback",
+    "📈 Helped improve team metrics",
+    "📚 Learned new tool/technique",
+    "🤓 Shared learning with team",
+    "💪 Stepped out of comfort zone",
+    "🌱 Applied feedback effectively",
+    "🎓 Mentored/supported others",
+    "🎯 Met sprint commitment",
+    "🚀 Contributed to team goals",
+    "💬 Raised risks early",
+    "🌟 Received peer recognition",
+    "🤝 Supported cross-team effort"
+  ],
+  "users": [
+    "Bishwajeet",
+    "Senthil",
+    "Gomathi",
+    "Srini",
+    "Kadhambari",
+    "Sangeetha",
+    "Roocha",
+    "Janani"
+  ]
+}
